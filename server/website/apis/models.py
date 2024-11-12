@@ -1,10 +1,45 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib import admin
+from django.utils.html import mark_safe
 
 
 class User(AbstractUser):
-    pass
+    email = models.EmailField(
+        max_length=100,
+        unique=True,
+        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+    )
+    avatar = models.ImageField(
+        upload_to="avatars/%Y/%m/%d/",
+        default=None,
+        null=True,
+        blank=True,
+        help_text="Upload avatar of the user",
+    )
+    reset_code = models.CharField(max_length=7, null=True, blank=True, unique=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
+
+    @admin.display(description="Preview")
+    def avatar_preview(self):
+        if self.avatar:
+            return mark_safe(
+                f'<img src="{self.avatar.url}" alt="{self.username}" width="80" height="80" class="img-thumbnail rounded-circle shadow" />'
+            )
+
+    def __str__(self):
+        return self.username
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    mobile = models.CharField(max_length=15, blank=True)
+    location = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.user.username
 
 
 class Common(models.Model):

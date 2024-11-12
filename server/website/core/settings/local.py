@@ -10,6 +10,6 @@ INTERNAL_IPS = ["*"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "epolls.db",
+        "NAME": path.join(path.join(BASE_DIR, "database"), environ.get("DB_NAME")),
     }
 }

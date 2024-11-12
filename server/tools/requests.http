@@ -1,0 +1,16 @@
+POST http://localhost:8000/o/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "grant_type": "password",
+    "username": "admin@gmail.com",
+    "password": "1",
+    "client_id": "TC5Ammal9GyKxJdU6iVNOSruU3Ntg74jBmpvfPkO",
+    "client_secret": "JdVRRhVgjm0mFKXgNWDQQ8uE2WvpcbBrP8xeJypw8fXwKTF963phNybzMIirCz1YWx5GNlPJiM0cirkMmkd8cEvOEoDie4U7crL1kWCTZdtIk0NBaRuDaVcdt9pjazqg"
+}
+
+###
+
+GET http://localhost:8000/users/current-user/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer a5mBInMLeyqAwv8uWyQqx53t6lj3YI
