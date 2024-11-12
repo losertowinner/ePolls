@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Question, Choice, Vote, Poll
+from .models import Question, Choice, Vote, Poll, Profile
 
 
 class ChoiceInline(admin.StackedInline):
@@ -20,3 +20,8 @@ class VoteInline(admin.StackedInline):
 
 class TagPollInline(admin.TabularInline):
     model = Poll.tags.through
+
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False

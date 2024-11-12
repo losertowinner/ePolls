@@ -20,7 +20,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    "core.apps.AdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",

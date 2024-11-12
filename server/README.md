@@ -12,7 +12,7 @@ The `Django` 🚀 project follows a RESTful API architectural style, emphasizing
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. [See commands]('./docs/commands.md')
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. [See commands](./docs/commands.md)
 
 ## Author
 

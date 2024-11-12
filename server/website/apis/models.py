@@ -131,7 +131,7 @@ class Choice(Common):
         return self.vote_set.count()
 
     def __str__(self):
-        return self.content
+        return f"{self.content} - {self.question.title}"
 
 
 class Vote(Common):
