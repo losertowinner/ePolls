@@ -1,0 +1,8 @@
+.text-justify {
+	text-align: justify;
+}
+
+.size-6 {
+	width: 1.5rem; /* 24px */
+	height: 1.5rem; /* 24px */
+}

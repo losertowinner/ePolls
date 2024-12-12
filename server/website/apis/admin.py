@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import Question, Choice, Category, Poll, Vote, Tag, User, Profile
+from .models import Question, Choice, Vote, Tag, User, Profile
 from .inlines import (
     QuestionInline,
     ChoiceInline,
     VoteInline,
-    TagPollInline,
+    TagInline,
     ProfileInline,
 )
 from .forms import UserChangeForm, UserCreationForm
@@ -27,15 +27,10 @@ class SlugAdmin(Common):
     search_fields = ["slug", "title"]
 
 
-class PollAdmin(SlugAdmin):
-    list_display = ["title", "questions", "published_date"] + SlugAdmin.list_display
-    inlines = [QuestionInline, TagPollInline]
+class QuestionAdmin(SlugAdmin):
+    list_display = ["title", "published_date"] + SlugAdmin.list_display
+    inlines = [ChoiceInline, TagInline]
     exclude = ["tags"]
-
-
-class QuestionAdmin(Common):
-    list_display = ["title", "poll"] + Common.list_display
-    inlines = [ChoiceInline]
 
 
 class ChoiceAdmin(Common):
@@ -119,8 +114,6 @@ class ProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Choice, ChoiceAdmin)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Poll, PollAdmin)
 admin.site.register(Vote, VoteAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(User, UserAdmin)

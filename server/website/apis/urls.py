@@ -3,12 +3,14 @@ from django.urls import path, include
 
 from .views import (
     UserViewSet,
+    QuestionViewSet,
     get_filter_options,
     yearly_votes_chart,
 )
 
 router = routers.DefaultRouter()
 router.register(r"users", UserViewSet)
+router.register(r"questions", QuestionViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

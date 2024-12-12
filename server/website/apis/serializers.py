@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import User, Profile
+from .models import User, Profile, Question, Choice
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         profile_data = validated_data.pop("profile")
-        user = User.objects.create(**validated_data)
+        user = User(**validated_data)
         user.set_password(validated_data["password"])
         user.save()
         Profile.objects.create(user=user, **profile_data)
@@ -39,3 +39,17 @@ class UserSerializer(serializers.ModelSerializer):
 class CurrentUserSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ["last_login"]
+
+
+class ChoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Choice
+        fields = ["id", "content"]
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+    choices = ChoiceSerializer(many=True)
+
+    class Meta:
+        model = Question
+        fields = ["slug", "title", "description", "choices"]

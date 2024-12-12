@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from .models import Question, Choice, Vote, Poll, Profile
+from .models import Question, Choice, Vote, Profile
 
 
-class ChoiceInline(admin.StackedInline):
+class ChoiceInline(admin.TabularInline):
     model = Choice
     extra = 4
 
@@ -18,8 +18,8 @@ class VoteInline(admin.StackedInline):
     extra = 3
 
 
-class TagPollInline(admin.TabularInline):
-    model = Poll.tags.through
+class TagInline(admin.TabularInline):
+    model = Question.tags.through
 
 
 class ProfileInline(admin.StackedInline):

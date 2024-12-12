@@ -1,11 +1,18 @@
 from django.db.models.functions import ExtractYear, ExtractMonth
 from django.db.models import Count
 
-from .models import User, Vote, Poll
+from .models import User, Vote, Question
 
 
 def load_users():
     return User.objects.filter(is_active=True).all()
+
+
+def load_questions():
+    return Question.objects.filter(is_active=True).order_by("-published_date").all()
+
+
+# Statistics
 
 
 def stats_votes(year):
@@ -20,7 +27,7 @@ def stats_votes(year):
 
 def filter_options():
     return (
-        Poll.objects.annotate(year=ExtractYear("date_created"))
+        Question.objects.annotate(year=ExtractYear("date_created"))
         .values("year")
         .order_by("-year")
         .distinct()

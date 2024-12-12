@@ -5,19 +5,19 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .serializers import UserSerializer, CurrentUserSerializer
+from .serializers import UserSerializer, CurrentUserSerializer, QuestionSerializer
 from .utils import (
     months,
     generate_color_palette,
     get_year_dict,
 )
-from .dao import load_users, stats_votes, filter_options
+from .dao import load_users, stats_votes, filter_options, load_questions
 
 
 @staff_member_required
 def get_filter_options(request):
     queries = filter_options()
-    options = [poll["year"] for poll in queries]
+    options = [question["year"] for question in queries]
 
     return JsonResponse(
         {
@@ -67,3 +67,8 @@ class UserViewSet(viewsets.ModelViewSet):
             CurrentUserSerializer(request.user).data,
             status=status.HTTP_200_OK,
         )
+
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = load_questions()
+    serializer_class = QuestionSerializer
