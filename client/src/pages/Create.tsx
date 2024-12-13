@@ -1,13 +1,36 @@
 import { FC, useState } from 'react';
 import { Button, Card, Col, Form, Modal, Row } from 'react-bootstrap';
 import { CiCircleRemove } from 'react-icons/ci';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router';
 
-import Title from '@/components/ui/Title';
+import Title from '@/components/ui/atoms/Title';
+import { pollsApi } from '@/services/polls';
 
 const Create: FC = () => {
+	const navigate = useNavigate();
+	const [title, setTitle] = useState<string>('');
 	const [options, setOptions] = useState<string[]>(['Option 1', 'Option 2']);
 	const [description, setDescription] = useState<string>('');
 	const [showDescription, setShowDescription] = useState<boolean>(false);
+
+	const createPollMutation = useMutation({
+		mutationFn: pollsApi.createQuestion,
+		onSuccess: (data) => {
+			navigate(`/poll/${data.slug}`);
+		},
+	});
+
+	const handleSubmit = () => {
+		createPollMutation.mutate({
+			title,
+			description,
+			choices: options.map((content, index) => ({
+				id: index,
+				content,
+			})),
+		});
+	};
 
 	const handleAddOption = () => {
 		setOptions([...options, `Option ${options.length + 1}`]);
@@ -45,6 +68,13 @@ const Create: FC = () => {
 									type='text'
 									className='mb-2'
 									placeholder='Type your question here'
+									value={title}
+									onChange={(e) =>
+										setTitle(
+											e.target
+												.value,
+										)
+									}
 								/>
 								{!showDescription && (
 									<Button
@@ -151,10 +181,13 @@ const Create: FC = () => {
 								</Button>
 							</Form.Group>
 							<Button
-								onClick={() =>
-									console.log('Hello')
+								onClick={handleSubmit}
+								disabled={
+									createPollMutation.isPending
 								}>
-								Create poll
+								{createPollMutation.isPending
+									? 'Creating...'
+									: 'Create poll'}
 							</Button>
 						</Form>
 					</Modal.Body>

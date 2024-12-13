@@ -27,7 +27,7 @@ def get_filter_options(request):
 
 
 @staff_member_required
-def yearly_votes_chart(request, year):
+def get_votes_data(request, year):
     queries = stats_votes(year=year)
 
     votes_dict = get_year_dict()

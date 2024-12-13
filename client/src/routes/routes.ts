@@ -1,9 +1,10 @@
+import { lazy } from 'react';
 import { Routes } from '@/types/routes.types';
 
-import Home from '@/pages/Home';
-import Pricing from '@/pages/Pricing';
-import Create from '@/pages/Create';
-import Demo from '@/pages/Demo';
+const Home = lazy(() => import('@/pages/Home'));
+const Pricing = lazy(() => import('@/pages/Pricing'));
+const Create = lazy(() => import('@/pages/Create'));
+const Demo = lazy(() => import('@/pages/Demo'));
 
 const PublicRoutes: Routes[] = [
 	{
@@ -12,7 +13,7 @@ const PublicRoutes: Routes[] = [
 	},
 	{
 		path: '/pricing/',
-		component: Pricing,
+			component: Pricing,
 	},
 	{
 		path: '/create/',

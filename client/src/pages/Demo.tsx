@@ -1,46 +1,24 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, Suspense } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
-import Title from '@/components/ui/Title';
-import axios from 'axios';
-
-type Question = {
-	slug: string;
-	title: string;
-	description: undefined | string;
-	choices: Array<{ id: number; content: string }>;
-};
+import Title from '@/components/ui/atoms/Title';
+import Loading from '@/components/ui/atoms/Loading';
+import { useQuestions } from '@/hooks/useQuestions';
 
 const Demo: FC = () => {
-	const [question, setQuestion] = useState<Question[]>([]);
-	const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: number }>({});
+	const { data: questions, error } = useQuestions();
 
-	useEffect(() => {
-		const fetchQuestions = async () => {
-			try {
-				const response = await axios.get<Question[]>(
-					'http://127.0.0.1:8000/questions/',
-				);
-				setQuestion(response.data);
-			} catch (err) {
-				console.error(err);
-			} finally {
-				console.log('Loading...');
-			}
-		};
-
-		fetchQuestions();
-	}, []);
-
-	const handleAnswerChange = (questionSlug: string, choiceId: number) => {
-		setSelectedAnswers((prevAnswers) => ({
-			...prevAnswers,
-			[questionSlug]: choiceId,
-		}));
-	};
+	if (error) {
+		console.error('Error fetching questions:', error);
+		return (
+			<div className='text-center text-danger mt-5'>
+				Failed to load questions. Please try again later.
+			</div>
+		);
+	}
 
 	return (
-		<>
+		<Suspense fallback={<Loading />}>
 			<section className='pt-5 px-3 pb-md-4 mx-auto text-center'>
 				<Title
 					subject={'Experience Live Voting'}
@@ -53,7 +31,7 @@ const Demo: FC = () => {
 				className='modal show mb-5'
 				style={{ display: 'block', position: 'initial' }}>
 				<Modal.Dialog>
-					{question.map((q) => (
+					{questions?.map((q) => (
 						<Modal.Body key={q.slug}>
 							<Form className='p-3'>
 								<h3 className='fs-5 fw-bold'>
@@ -65,45 +43,20 @@ const Demo: FC = () => {
 									</Form.Label>
 
 									<div className='mb-3'>
-										{q.choices.map(
-											(c) => {
-												return (
-													<Form.Check
-														key={
-															c.id
-														}
-														type={
-															'radio'
-														}
-														id={`${q.slug}-${c.id}`}
-														label={`${c.content}`}
-														name={
-															q.slug
-														}
-														checked={
-															selectedAnswers[
-																q
-																	.slug
-															] ===
-															c.id
-														}
-														onChange={() =>
-															handleAnswerChange(
-																q.slug,
-																c.id,
-															)
-														}
-													/>
-												);
-											},
-										)}
+										{q.choices.map((c) => (
+											<Form.Check
+												key={c.id}
+												type={'radio'}
+												id={`${q.slug}-${c.id}`}
+												label={c.content}
+												name={q.slug}
+											/>
+										))}
 									</div>
 								</Form.Group>
 								<Form.Group className='mb-3 gap-4'>
 									<Button>Vote</Button>
-									<Button>
-										Show results
-									</Button>
+									<Button>Show results</Button>
 								</Form.Group>
 								<p>150,776 votes</p>
 							</Form>
@@ -111,7 +64,7 @@ const Demo: FC = () => {
 					))}
 				</Modal.Dialog>
 			</section>
-		</>
+		</Suspense>
 	);
 };
 

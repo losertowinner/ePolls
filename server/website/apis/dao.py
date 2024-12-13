@@ -1,7 +1,7 @@
 from django.db.models.functions import ExtractYear, ExtractMonth
 from django.db.models import Count
 
-from .models import User, Vote, Question
+from .models import User, Vote, Question, Choice
 
 
 def load_users():

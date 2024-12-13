@@ -5,7 +5,7 @@ from .views import (
     UserViewSet,
     QuestionViewSet,
     get_filter_options,
-    yearly_votes_chart,
+    get_votes_data,
 )
 
 router = routers.DefaultRouter()
@@ -16,5 +16,5 @@ urlpatterns = [
     path("", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("chart/filter-options/", get_filter_options, name="chart-filter-options"),
-    path("chart/votes/<int:year>/", yearly_votes_chart, name="chart-votes"),
+    path("chart/votes/<int:year>/", get_votes_data, name="chart-votes"),
 ]
